@@ -1,0 +1,115 @@
+<style>
+#game button{
+    width: 100px;
+}
+</style>
+
+<script>
+
+var util = function (){};
+
+util.random = function (a) {
+    var temp,
+        j;
+
+    for (var i = 0; i< a.length; i++) {
+        j = Math.floor(Math.random() * (i + 1));
+        temp = a[i];
+        a[i] = a[j];
+        a[j] = temp
+    }
+    return a;
+};
+
+var Game = function (config) {
+    this.tiles = [];
+    this.bound = config.bound;
+    this._dummyIndex = 0;
+};
+
+Game.prototype.setup = function () {
+    this.createTiles();
+    this.initEvents();
+};
+
+Game.prototype.swap = function (a, b) {
+    var t1 = this.tiles[a],
+        t2 = this.tiles[b],
+        tempTileValue,
+        tileNodes = document.getElementById('game').getElementsByTagName('button'),
+        tempTileNode;
+
+    tempTileValue = t1.v;
+    t1.v = t2.v;
+    t2.v = tempTileValue;
+
+    tempTileNode = tileNodes[a].innerHTML;
+    tileNodes[a].innerHTML = tileNodes[b].innerHTML;
+    tileNodes[b].innerHTML = tempTileNode;
+    this._dummyIndex = a;
+};
+
+Game.prototype.checkIfMovedAllowed = function (a, b) {
+    var t1 = this.tiles[a],
+        t2 = this.tiles[b];
+
+    if (Math.abs(t1.x - t2.x) <= 1 && Math.abs(t1.y - t2.y) <= 1 && t1.v !== 0) {
+        this.swap(a, b);
+    } else {
+        alert('Sorry this move is not allowed');
+    }
+};
+
+Game.prototype.createTiles = function () {
+    var sequence = [],
+        tile = {},
+        l = 0;
+
+    for (var i = 0; i < this.bound * this.bound; i++) {
+        sequence[i] = i;
+    }
+    sequence = util.random(sequence);
+    for (var j = 0; j < this.bound; j++) {
+        for (var k = 0; k < this.bound; k++) {
+            if (sequence[l] === 0) {
+                this._dummyIndex = l;
+            }
+            tile = {
+                x: i,
+                y: j,
+                v: sequence[l]
+            };
+            this.tiles.push(tile);
+            document.getElementById('game').innerHTML = document.getElementById('game').innerHTML + '<button data-index="' + l + '">' + tile.v + '</button>'
+            l++;
+        }
+    }
+    document.getElementById('game').style.width = this.bound * 100;
+};
+
+
+Game.prototype.render = function () {
+    this.setup();
+};
+
+Game.prototype.initEvents = function () {
+    var t = this;
+    document.getElementById('game').addEventListener('click', function (e){
+        if (e.target.tagName.toLowerCase() === 'button') {
+            t.checkIfMovedAllowed(e.target.getAttribute('data-index'), t._dummyIndex);
+        }
+    });
+};
+
+var g = new Game({
+    bound: 3
+});
+window.onload = function () {
+    g.render();
+}
+
+</script>
+
+<body>
+<div id="game"></div>
+</body>
