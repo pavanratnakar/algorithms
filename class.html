@@ -1,0 +1,55 @@
+<script>
+
+    // BASIC
+    var Human = function () {
+        var place = 'Earth';
+        return {
+            getPlace: function () {
+                return place;
+            }
+        }
+    };
+
+    var Man = function () {};
+    Man.prototype = new Human();
+
+    var m1 = new Man();
+    console.log(m1.getPlace());
+
+    var Women = function () {
+        var that = Human();
+        return that;
+    };
+    var w1 = new Women();
+    console.log(w1.getPlace());
+
+    var test = {
+        name: 'Pavan'
+    };
+
+    var test2 = {
+
+    };
+    var f = function () {};
+    f.prototype = test;
+    test2 = new f();
+    console.log(test2.name);
+
+    // SINGLETON
+    var SingleTon = (function () {
+        var instance = '';
+        return {
+            getInstance: function () {
+                if (!instance) {
+                    instance = new Object();
+                }
+                return instance;
+            }
+        }
+    })();
+    var test1 = SingleTon.getInstance();
+    var test2 = SingleTon.getInstance();
+    alert(test1 === test2);
+
+
+</script>
