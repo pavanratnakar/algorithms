@@ -1,0 +1,104 @@
+<script>
+var data = [
+    {name: 'Pavan', age: 29},
+    {name: 'Test', age: 10}
+];
+
+var person = {
+    data: [
+        {name: 'I am test', age: 100}
+    ],
+    getAge: function () {
+        return this.data[0].age;
+    }
+}
+
+var age = person.getAge;
+console.log(age());
+
+var age1 = person.getAge.bind(person);
+console.log(age1());
+
+
+var human = {
+    data: [
+        {name: 'I am human', age: 200}
+    ]
+};
+human.getAge = person.getAge.bind(human);
+
+console.log(human.getAge());
+
+var greet = function (gender, age, name) {
+    if (age > 30) {
+        return name + ' age is ' + age;
+    } else {
+        return name;
+    }
+}
+
+var test1 = greet.bind(null, 'Male', 40);
+console.log(test1('Pavan'));
+
+var test2 = greet.bind(null, 'Female', 10);
+console.log(test2('Hello'));
+
+
+var clientData = {
+    fullName: '',
+    setName: function (firstName, lastName) {
+        this.fullName = firstName + ' ' + lastName;
+    }
+};
+getUserInput = function (firstName, lastName, callback, callbackObject) {
+    callback.apply(callbackObject, [firstName, lastName]);
+}
+
+var name = getUserInput('Pavan', 'Ratnakar', clientData.setName, clientData);
+console.log(clientData);
+console.log(clientData.fullName);
+
+var testObject = {0:"Martin", 1:78, 2:67, 3:["Letta", "Marieta", "Pauline"], length:4 };
+
+var testArray = Array.prototype.splice.call(testObject, 0);
+console.log(testArray);
+console.log(Array.prototype.indexOf.call(testArray, "Martin"));
+
+ console.log (Array.prototype.reverse.call(testArray));
+
+
+var testArguments = function () {
+    var arr = Array.prototype.slice.apply(arguments);
+    console.log(arguments.length, arr.length);
+    console.log(arguments.slice, arr.slice);
+};
+
+testArguments(1,2,3,4,5,6,7);
+
+
+var gameController = {
+    scores:[20, 34, 55, 46, 77],
+    avgScore: null,
+    players: [
+        {name:"Tommy", playerID:987, age:23},
+        {name:"Pau", playerID:87, age:33}
+    ]
+};
+
+var appController = {
+    scores: [900, 845, 809, 950],
+    avgScore: null,
+    avg: function () {
+        var sumOfScores = this.scores.reduce (function (prev, cur, index, array) {
+            return prev + cur;
+        });
+        this.avgScore = sumOfScores / this.scores.length;
+    }
+};
+
+appController.avg.apply(gameController);
+appController.avg();
+console.log(appController.avgScore);
+console.log(gameController.avgScore);
+
+</script>
